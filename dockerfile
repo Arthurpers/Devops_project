@@ -1,4 +1,4 @@
-# base
+# Base
 FROM node:18 as base
 
 WORKDIR /app
@@ -9,7 +9,7 @@ RUN npm install
 
 COPY . .
 
-# for build
+# Build
 
 FROM base as builder
 
@@ -17,7 +17,7 @@ WORKDIR /app
 
 RUN npm run build
 
-# for production
+# Production
 
 FROM node:18-alpine3.15
 
@@ -29,6 +29,8 @@ RUN npm install --only=production
 
 COPY --from=builder /app/dist ./
 
+USER node
+
 EXPOSE 3000
 
-ENTRYPOINT ["npm","start"]
+ENTRYPOINT ["node","./server.js"]
